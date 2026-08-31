@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cookie Business Club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ivory:#FBF5EC;
+  --beige:#F1E4D0;
+  --nude:#E3C8AC;
+  --terracota:#C17B57;
+  --terracota-fuerte:#A8613F;
+  --rosa:#E9CFCB;
+  --chocolate:#3A2A20;
+  --chocolate-suave:#5C463A;
+  --dorado:#B8933F;
+  --white:#FFFFFF;
+  --linea:rgba(58,42,32,.12);
+  --muted:#8C7A6C;
+  --exito:#5E7A5E;
+  --shadow:0 20px 50px -18px rgba(58,42,32,.25);
+  --shadow-suave:0 10px 30px -14px rgba(58,42,32,.18);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Inter",sans-serif;color:var(--chocolate);background:var(--chocolate);line-height:1.5;-webkit-font-smoothing:antialiased}
+.serif{font-family:"Fraunces",serif}
+button{font:inherit;cursor:pointer;border:0;background:none}
+input,select,textarea{font-family:inherit}
+img{max-width:100%;display:block}
+::selection{background:var(--nude)}
+
+.app{max-width:460px;margin:0 auto;min-height:100vh;background:var(--ivory);display:flex;flex-direction:column;position:relative;overflow:hidden}
+@media(min-width:880px){ .app{margin:20px auto;min-height:calc(100vh - 40px);border-radius:34px;box-shadow:0 40px 90px -30px rgba(0,0,0,.5)} }
+
+.pantalla{flex:1;display:none;flex-direction:column}
+.pantalla.activa{display:flex;animation:entrar .35s cubic-bezier(.2,.8,.3,1)}
+@keyframes entrar{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:16px 22px;border-radius:16px;font-weight:700;font-size:15px;transition:.2s ease;width:100%}
+.btn:active{transform:scale(.98)}
+.btn-primario{background:linear-gradient(135deg,var(--terracota),var(--terracota-fuerte));color:#fff;box-shadow:0 14px 28px -10px rgba(161,90,58,.55)}
+.btn-primario:hover{box-shadow:0 18px 34px -10px rgba(161,90,58,.65);transform:translateY(-1px)}
+.btn-secundario{background:var(--white);color:var(--chocolate);border:1.5px solid var(--linea)}
+.btn-secundario:hover{border-color:var(--terracota)}
+.btn-oscuro{background:var(--chocolate);color:var(--ivory)}
+.btn-mini{width:auto;padding:10px 18px;font-size:13px;border-radius:12px}
+
+#p-bienvenida{background:radial-gradient(120% 90% at 20% -10%,#5C4433,var(--chocolate) 65%);color:var(--ivory);justify-content:space-between;padding:0}
+.bienvenida-visual{flex:1;display:flex;align-items:center;justify-content:center;position:relative;padding:60px 30px 20px}
+.cookie-hero{width:180px;height:180px;border-radius:50%;background:
+  radial-gradient(circle at 28% 26%,#5c3420 0 5%,transparent 5.5%),
+  radial-gradient(circle at 66% 22%,#3a1c12 0 4%,transparent 4.5%),
+  radial-gradient(circle at 48% 70%,#4a2416 0 5%,transparent 5.5%),
+  radial-gradient(circle at 78% 64%,#6a3b22 0 3%,transparent 3.5%),
+  radial-gradient(circle at 20% 66%,#3a1c12 0 4%,transparent 4.5%),
+  linear-gradient(135deg,var(--nude),var(--terracota-fuerte));
+  box-shadow:inset -18px -18px 40px rgba(58,20,10,.35),0 30px 60px -14px rgba(0,0,0,.5);
+  animation:flotar 6s ease-in-out infinite;
+}
+@keyframes flotar{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-14px) rotate(2deg)}}
+.bienvenida-copy{padding:10px 30px 44px;text-align:center}
+.bienvenida-copy .kicker{font-size:12px;letter-spacing:.14em;color:var(--nude);font-weight:700;margin-bottom:14px}
+.bienvenida-copy h1{font-size:34px;font-weight:500;line-height:1.12;margin-bottom:14px}
+.bienvenida-copy p{color:rgba(251,245,236,.72);font-size:15px;max-width:34ch;margin:0 auto 30px}
+.bienvenida-botones{display:grid;gap:12px}
+
+.auth-header{padding:26px 26px 6px}
+.auth-header .volver{color:var(--muted);font-weight:700;font-size:13.5px}
+.auth-body{padding:10px 26px 40px;flex:1;display:flex;flex-direction:column}
+.auth-body h2{font-size:26px;font-weight:500;margin-bottom:6px}
+.auth-body .sub{color:var(--muted);font-size:14px;margin-bottom:28px}
+.campo{margin-bottom:16px}
+.campo label{font-size:12.5px;font-weight:700;color:var(--chocolate-suave);display:block;margin-bottom:6px}
+.input-wrap{position:relative}
+.campo input{width:100%;padding:14px 16px;border-radius:14px;border:1.5px solid var(--linea);background:var(--white);font-size:14.5px;transition:.15s}
+.campo input:focus{outline:none;border-color:var(--terracota)}
+.campo input.error{border-color:#C24A4A}
+.toggle-pass{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:12.5px;font-weight:700;color:var(--terracota)}
+.msg-error{color:#C24A4A;font-size:12px;margin-top:5px;display:none}
+.campo.invalido .msg-error{display:block}
+.fila-opciones{display:flex;justify-content:space-between;align-items:center;margin:6px 0 24px;font-size:13px}
+.check-remember{display:flex;align-items:center;gap:7px;color:var(--chocolate-suave)}
+.link-sutil{color:var(--terracota);font-weight:700}
+.auth-switch{text-align:center;margin-top:20px;font-size:13.5px;color:var(--muted)}
+
+.app-header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--linea);position:sticky;top:0;background:rgba(251,245,236,.92);backdrop-filter:blur(10px);z-index:5}
+.app-header .logo{font-family:'Fraunces',serif;font-weight:600;font-size:16px}
+.app-header .logo em{color:var(--terracota);font-style:italic;font-weight:500}
+.avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--terracota),var(--dorado));display:grid;place-items:center;color:#fff;font-weight:700;font-size:13.5px;cursor:pointer}
+
+.contenido{flex:1;overflow-y:auto;padding:22px 22px 110px}
+
+.bottom-nav{position:sticky;bottom:0;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-top:1px solid var(--linea);display:flex;justify-content:space-around;padding:9px 4px 16px;z-index:6}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px;font-weight:700;color:var(--muted);padding:6px 10px;border-radius:12px;transition:.15s}
+.nav-item .ico{font-size:19px}
+.nav-item.activo{color:var(--terracota-fuerte);background:var(--rosa)}
+
+.saludo{font-family:'Fraunces',serif;font-size:24px;font-weight:500;margin-bottom:3px}
+.subsaludo{color:var(--muted);font-size:13.5px;margin-bottom:22px}
+.motivacion{background:var(--chocolate);color:var(--ivory);border-radius:18px;padding:16px 18px 16px 46px;font-size:13px;font-style:italic;font-family:'Fraunces',serif;margin-bottom:20px;position:relative}
+.motivacion::before{content:"“";position:absolute;left:16px;top:8px;font-size:34px;color:var(--dorado);font-family:'Fraunces',serif;font-style:normal;line-height:1}
+
+.progress-card{background:linear-gradient(135deg,var(--terracota),var(--terracota-fuerte));border-radius:22px;padding:22px;color:#fff;margin-bottom:16px;box-shadow:var(--shadow-suave)}
+.progress-card .rango{font-size:11px;font-weight:700;opacity:.85;text-transform:uppercase;letter-spacing:.08em}
+.progress-card .titulo{font-family:'Fraunces',serif;font-size:20px;font-weight:500;margin:6px 0 14px}
+.barra-fondo{background:rgba(255,255,255,.28);border-radius:20px;height:9px;overflow:hidden}
+.barra-relleno{background:#fff;height:100%;border-radius:20px;transition:width .6s cubic-bezier(.2,.8,.3,1)}
+.progress-card .pct{margin-top:9px;font-size:12.5px;font-weight:700}
+
+.card{background:var(--white);border:1px solid var(--linea);border-radius:20px;padding:18px;margin-bottom:12px;box-shadow:var(--shadow-suave);transition:.2s}
+.card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.card-fila{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.card h4{font-size:15px;font-weight:700}
+.card p{font-size:12.5px;color:var(--muted);margin-top:3px}
+.card .flecha{color:var(--terracota);font-weight:800;flex:none}
+
+.seccion-titulo{font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:26px 0 12px;display:flex;justify-content:space-between;align-items:center}
+.ver-todas{color:var(--terracota);font-size:12px;font-weight:700;text-transform:none;letter-spacing:0}
+
+.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.quick{background:var(--beige);border-radius:16px;padding:14px 6px;text-align:center;font-size:10.5px;font-weight:700;color:var(--chocolate-suave);transition:.15s}
+.quick:hover{background:var(--nude)}
+.quick .ico{font-size:19px;display:block;margin-bottom:5px}
+
+.scroll-row{display:flex;gap:12px;overflow-x:auto;padding-bottom:4px;margin-top:2px}
+.mini-receta{flex:none;width:130px;border-radius:16px;overflow:hidden;background:var(--white);border:1px solid var(--linea);cursor:pointer;transition:.2s}
+.mini-receta:hover{transform:translateY(-3px);box-shadow:var(--shadow-suave)}
+.mini-img{height:70px;background:linear-gradient(135deg,var(--nude),var(--terracota-fuerte))}
+.mini-receta .info{padding:9px 10px}
+.mini-receta h5{font-size:12px;font-weight:700}
+.mini-receta span{font-size:10px;color:var(--muted)}
+
+.logros-fila{display:flex;gap:10px;overflow-x:auto}
+.logro-mini{flex:none;width:66px;text-align:center}
+.logro-mini .circ{width:52px;height:52px;border-radius:50%;background:var(--beige);display:grid;place-items:center;font-size:22px;margin:0 auto 5px;border:2px solid transparent}
+.logro-mini.conseguido .circ{background:linear-gradient(135deg,#FCEFD9,#F3D9A8);border-color:var(--dorado)}
+.logro-mini span{font-size:9px;font-weight:700;color:var(--muted)}
+
+.skeleton{background:linear-gradient(100deg,var(--beige) 30%,var(--nude) 50%,var(--beige) 70%);background-size:200% 100%;animation:shimmer 1.3s infinite;border-radius:14px}
+@keyframes shimmer{to{background-position:-200% 0}}
+.skeleton-card{height:74px;margin-bottom:12px}
+.skeleton-tile{height:150px}
+
+.modulo-card{background:var(--white);border:1px solid var(--linea);border-radius:20px;margin-bottom:12px;overflow:hidden;transition:.2s}
+.modulo-top{display:flex;gap:14px;align-items:center;padding:18px;cursor:pointer}
+.modulo-num{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,var(--terracota),var(--dorado));color:#fff;display:grid;place-items:center;font-weight:800;font-size:15px;flex:none;font-family:'Fraunces',serif}
+.modulo-num.bloqueado{background:var(--beige);color:var(--muted)}
+.modulo-num.completado{background:var(--exito)}
+.modulo-info{flex:1}
+.modulo-info h4{font-size:15px;font-weight:700}
+.modulo-info p{font-size:12px;color:var(--muted);margin-top:2px}
+.modulo-barra{background:var(--beige);height:5px;border-radius:6px;margin-top:8px;overflow:hidden}
+.modulo-barra .relleno{background:var(--terracota);height:100%;border-radius:6px}
+.estado-tag{font-size:10px;font-weight:800;padding:4px 9px;border-radius:999px;flex:none}
+.estado-tag.disponible{background:var(--rosa);color:var(--terracota-fuerte)}
+.estado-tag.completado{background:#E3ECE3;color:var(--exito)}
+.estado-tag.bloqueado{background:var(--beige);color:var(--muted)}
+.clases-lista{display:none;flex-direction:column;padding:0 18px 16px;gap:7px}
+.modulo-card.abierto .clases-lista{display:flex}
+.clase-row{display:flex;align-items:center;gap:10px;font-size:13px;padding:11px 13px;background:var(--ivory);border-radius:12px;cursor:pointer;transition:.15s}
+.clase-row:hover{background:var(--beige)}
+.clase-row.bloqueada{opacity:.5;cursor:not-allowed}
+.clase-check{width:19px;height:19px;border-radius:50%;border:1.5px solid var(--terracota);flex:none;display:grid;place-items:center;font-size:10px;color:#fff}
+.clase-row.hecha .clase-check{background:var(--exito);border-color:var(--exito)}
+.clase-row.hecha span.titulo{color:var(--muted);text-decoration:line-through}
+
+.detalle-top{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.volver{color:var(--terracota);font-weight:700;font-size:13.5px}
+.video-espacio{background:var(--chocolate);border-radius:18px;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;color:rgba(251,245,236,.6);font-size:13px;margin:16px 0;flex-direction:column;gap:8px}
+.video-espacio .play{width:46px;height:46px;border-radius:50%;background:rgba(251,245,236,.15);display:grid;place-items:center;font-size:16px}
+.clase-contenido{font-size:14.5px;color:var(--chocolate-suave);line-height:1.7}
+.clase-contenido p{margin-bottom:12px}
+.materiales{margin-top:18px}
+.material-item{display:flex;gap:10px;align-items:center;padding:12px 14px;background:var(--white);border:1px solid var(--linea);border-radius:14px;margin-bottom:8px;font-size:13px}
+
+.tabs{display:flex;gap:8px;overflow-x:auto;margin-bottom:16px}
+.tab{white-space:nowrap;padding:9px 15px;border-radius:999px;font-size:12.5px;font-weight:700;background:var(--beige);color:var(--chocolate-suave);transition:.15s}
+.tab.activo{background:var(--chocolate);color:var(--ivory)}
+.receta-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.receta-card{border-radius:18px;overflow:hidden;background:var(--white);border:1px solid var(--linea);cursor:pointer;transition:.2s}
+.receta-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-suave)}
+.receta-img{height:92px;background:linear-gradient(135deg,var(--nude),var(--terracota-fuerte));position:relative}
+.receta-img .fav{position:absolute;top:9px;right:9px;font-size:16px;filter:drop-shadow(0 1px 3px rgba(0,0,0,.25))}
+.receta-card .info{padding:11px 12px}
+.receta-card h5{font-size:13px;font-weight:700}
+.receta-card span{font-size:10.5px;color:var(--muted)}
+
+.detalle-receta-img{height:200px;border-radius:20px;background:linear-gradient(135deg,var(--nude),var(--terracota-fuerte));position:relative;margin-bottom:16px}
+.detalle-receta-img .fav-grande{position:absolute;top:14px;right:14px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.9);display:grid;place-items:center;font-size:18px}
+.meta-receta{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 16px}
+.meta-chip{background:var(--beige);border-radius:999px;padding:6px 12px;font-size:11.5px;font-weight:700;color:var(--chocolate-suave)}
+.selector-cant{display:flex;gap:7px;margin:14px 0;overflow-x:auto}
+.chip-cant{padding:9px 15px;border-radius:999px;font-size:12.5px;font-weight:700;background:var(--beige);color:var(--chocolate-suave);white-space:nowrap;transition:.15s}
+.chip-cant.activo{background:var(--chocolate);color:var(--ivory)}
+.ingrediente-row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--linea);font-size:14px}
+.ingrediente-row span:last-child{font-weight:700}
+.paso-item{display:flex;gap:12px;margin-bottom:14px}
+.paso-num{width:26px;height:26px;border-radius:50%;background:var(--terracota);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:800;flex:none;font-family:'Fraunces',serif}
+.paso-item p{font-size:14px;color:var(--chocolate-suave)}
+.aviso{background:#FBF0DA;border:1px solid var(--dorado);color:#7A5C1D;font-size:11.5px;padding:11px 13px;border-radius:12px;margin-bottom:16px}
+.tip-box{background:var(--beige);border-radius:14px;padding:14px;font-size:13px;color:var(--chocolate-suave);margin-bottom:10px}
+.tip-label{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--dorado);margin-right:6px}
+.tip-label-error{color:#A85B4A}
+.acciones-receta{display:flex;gap:10px;margin-top:20px}
+
+.tool-card{background:var(--white);border:1px solid var(--linea);border-radius:20px;padding:20px;margin-bottom:14px}
+.tool-card h4{font-size:15.5px;font-weight:700;margin-bottom:3px;display:flex;align-items:center;gap:8px}
+.tool-card .desc{font-size:12px;color:var(--muted);margin-bottom:14px}
+.campo-sm{margin-bottom:11px}
+.campo-sm label{font-size:11.5px;font-weight:700;color:var(--chocolate-suave);display:block;margin-bottom:4px}
+.campo-sm input,.campo-sm select{width:100%;padding:12px 13px;border-radius:12px;border:1.5px solid var(--linea);font-size:13.5px;background:var(--ivory)}
+.campo-sm input:focus,.campo-sm select:focus{outline:none;border-color:var(--terracota)}
+.fila-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.resultado-box{background:var(--chocolate);color:var(--ivory);border-radius:16px;padding:16px;margin-top:12px;display:none}
+.resultado-box.mostrar{display:block;animation:entrar .3s ease}
+.resultado-fila{display:flex;justify-content:space-between;font-size:12.5px;padding:5px 0}
+.resultado-fila.destacado{font-size:16px;font-weight:800;color:#F3C98A;border-top:1px solid rgba(255,255,255,.15);margin-top:6px;padding-top:10px}
+.tools-tabs{display:flex;gap:8px;overflow-x:auto;margin-bottom:18px}
+.herramientas-toggle{display:none}
+.herramientas-toggle.activa{display:block}
+.lista-compras-item{display:flex;align-items:center;gap:10px;padding:11px 13px;background:var(--ivory);border-radius:12px;margin-bottom:7px;font-size:13px}
+.lista-compras-item input{width:17px;height:17px}
+.lista-compras-item.comprado span{text-decoration:line-through;color:var(--muted)}
+.receta-check{display:flex;align-items:center;gap:10px;padding:11px 13px;background:var(--white);border:1px solid var(--linea);border-radius:12px;margin-bottom:8px;font-size:13.5px;cursor:pointer}
+
+.perfil-header{text-align:center;margin-bottom:24px;padding-top:6px}
+.perfil-avatar{width:76px;height:76px;border-radius:50%;background:linear-gradient(135deg,var(--terracota),var(--dorado));display:grid;place-items:center;color:#fff;font-weight:800;font-size:26px;margin:0 auto 12px;font-family:'Fraunces',serif}
+.perfil-header h3{font-family:'Fraunces',serif;font-size:19px;font-weight:500}
+.perfil-header p{color:var(--muted);font-size:12.5px;margin-top:2px}
+.nivel-tag{display:inline-flex;margin-top:8px;background:var(--rosa);color:var(--terracota-fuerte);font-size:11px;font-weight:800;padding:5px 12px;border-radius:999px}
+
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:22px}
+.stat{background:var(--white);border:1px solid var(--linea);border-radius:16px;padding:14px 8px;text-align:center}
+.stat b{font-family:'Fraunces',serif;font-size:20px;display:block}
+.stat span{font-size:10px;color:var(--muted);font-weight:700}
+
+.logros-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px}
+.logro{text-align:center;padding:16px 6px;border-radius:16px;background:var(--beige);opacity:.45;transition:.2s}
+.logro.conseguido{opacity:1;background:linear-gradient(160deg,#FCEFD9,#F3D9A8);box-shadow:var(--shadow-suave)}
+.logro .ico{font-size:24px;display:block;margin-bottom:5px}
+.logro span{font-size:9.5px;font-weight:700;color:var(--chocolate-suave)}
+
+.config-item{display:flex;justify-content:space-between;align-items:center;padding:15px 4px;border-bottom:1px solid var(--linea);font-size:14px;cursor:pointer}
+.config-item:last-child{border-bottom:0}
+.config-item .valor{color:var(--muted);font-size:12.5px}
+.config-item.salir{color:#C24A4A;font-weight:700}
+
+.toast-cont{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:8px;width:calc(100% - 40px);max-width:420px;pointer-events:none}
+.toast{background:var(--chocolate);color:var(--ivory);padding:13px 18px;border-radius:14px;font-size:13px;font-weight:600;box-shadow:0 14px 34px -10px rgba(0,0,0,.4);display:flex;align-items:center;gap:10px;animation:toast-in .3s ease}
+@keyframes toast-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.modal-fondo{position:fixed;inset:0;background:rgba(58,42,32,.5);display:none;align-items:center;justify-content:center;z-index:300;padding:24px}
+.modal-fondo.activo{display:flex}
+.modal-box{background:var(--white);border-radius:22px;padding:26px;max-width:340px;width:100%;text-align:center;animation:entrar .25s ease}
+.modal-box h4{font-family:'Fraunces',serif;font-size:19px;margin-bottom:8px}
+.modal-box p{font-size:13.5px;color:var(--muted);margin-bottom:20px}
+.modal-botones{display:flex;gap:10px}
+
+.logro-modal .circ-grande{width:80px;height:80px;border-radius:50%;background:linear-gradient(160deg,#FCEFD9,#F3D9A8);display:grid;place-items:center;font-size:36px;margin:0 auto 14px;box-shadow:0 0 0 8px rgba(184,147,63,.15)}
+
+.empty-state{text-align:center;padding:50px 20px;color:var(--muted)}
+.empty-state .ico{font-size:40px;margin-bottom:10px}
+.empty-state p{font-size:13.5px}
+
+/* ---------------- Sistema de iconos (SVG, sin emojis) ---------------- */
+.icon-sprite{position:absolute;width:0;height:0;overflow:hidden}
+.ico-svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;display:block;flex:none}
+.ico-inline{width:16px;height:16px;display:inline-block;vertical-align:-3px;margin-right:7px}
+.nav-item .ico-svg{width:20px;height:20px}
+.quick .ico-svg{width:19px;height:19px;margin:0 auto 6px}
+.fav-grande .ico-svg{width:19px;height:19px;color:var(--muted)}
+.fav-grande.activo .ico-svg{color:#C24A4A;fill:#C24A4A}
+.receta-img .fav{position:absolute;top:9px;right:9px;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.85);display:grid;place-items:center}
+.receta-img .fav .ico-svg{width:14px;height:14px;color:var(--muted)}
+.receta-img .fav.activo .ico-svg{color:#C24A4A;fill:#C24A4A}
+.logro-mini .circ .ico-svg{width:22px;height:22px;color:var(--terracota-fuerte);stroke-width:1.6}
+.logro .ico-svg{width:24px;height:24px;color:var(--terracota-fuerte);margin-bottom:6px;stroke-width:1.6}
+.logro-modal .circ-grande .ico-svg{width:34px;height:34px;color:var(--terracota-fuerte);stroke-width:1.5}
+
+/* ===== COOKIE BUSINESS CLUB — VISUAL REDESIGN ===== */
+:root{
+ --ivory:#FFF9F5; --beige:#F7EDE8; --nude:#E8C9C0; --terracota:#D87878; --terracota-fuerte:#B95561;
+ --rosa:#F6DDE2; --chocolate:#24191A; --chocolate-suave:#624C4E; --dorado:#C59A55; --white:#FFFFFF;
+ --linea:rgba(36,25,26,.09); --muted:#9B8585; --exito:#5D806B;
+ --shadow:0 24px 70px -30px rgba(72,38,42,.28); --shadow-suave:0 12px 35px -20px rgba(72,38,42,.18);
+}
+html{background:#171011}
+body{background:radial-gradient(circle at 50% -10%,#493238 0,#171011 48%);}
+.app{background:linear-gradient(180deg,#FFFDFC 0%,#FFF8F4 100%);box-shadow:0 35px 100px rgba(0,0,0,.38)}
+@media(min-width:880px){.app{border:1px solid rgba(255,255,255,.16)}}
+.btn{border-radius:14px;letter-spacing:-.01em}
+.btn-primario{background:linear-gradient(135deg,#E58988,#B95561);box-shadow:0 14px 30px -12px rgba(185,85,97,.6)}
+.btn-secundario{box-shadow:0 6px 18px -12px rgba(36,25,26,.2)}
+.btn-oscuro{background:#24191A}
+#p-bienvenida{background:radial-gradient(circle at 50% 18%,#6D4A50 0,#352529 38%,#211719 76%);position:relative;overflow:hidden}
+#p-bienvenida:before,#p-bienvenida:after{content:"";position:absolute;border-radius:50%;filter:blur(2px);pointer-events:none}
+#p-bienvenida:before{width:300px;height:300px;background:rgba(239,173,177,.14);top:-130px;right:-90px}
+#p-bienvenida:after{width:240px;height:240px;background:rgba(197,154,85,.1);bottom:170px;left:-120px}
+.bienvenida-visual{flex:1.08;padding:52px 30px 10px;z-index:1}
+.cookie-hero{width:205px;height:205px;background:radial-gradient(circle at 30% 28%,#F2D0AE 0 5%,transparent 5.5%),radial-gradient(circle at 69% 25%,#8B4B35 0 4%,transparent 4.5%),radial-gradient(circle at 52% 69%,#9B5036 0 5%,transparent 5.5%),radial-gradient(circle at 78% 62%,#733A2D 0 3%,transparent 3.5%),radial-gradient(circle at 21% 68%,#743B2D 0 4%,transparent 4.5%),linear-gradient(145deg,#E6B77F,#B96848);border:7px solid rgba(255,255,255,.08);box-shadow:inset -20px -24px 45px rgba(65,25,18,.32),0 35px 80px rgba(0,0,0,.42),0 0 0 22px rgba(255,255,255,.025);position:relative}
+.cookie-hero:after{content:"";position:absolute;inset:20px;border-radius:50%;border:1px dashed rgba(255,255,255,.2);transform:rotate(18deg)}
+.bienvenida-copy{padding:8px 30px 42px;z-index:1}
+.bienvenida-copy .kicker{color:#E9B9BC;letter-spacing:.2em;font-size:11px}
+.bienvenida-copy h1{font-size:39px;letter-spacing:-.035em}
+.bienvenida-copy p{color:rgba(255,249,245,.7);line-height:1.65}
+.bienvenida-botones{gap:10px}
+#p-bienvenida .btn-secundario{background:rgba(255,255,255,.07)!important;border-color:rgba(255,255,255,.2)!important;color:#FFF9F5!important;backdrop-filter:blur(10px)}
+.app-header{padding:16px 20px;background:rgba(255,253,252,.88);border-bottom:1px solid rgba(36,25,26,.07)}
+.app-header .logo{font-size:17px;letter-spacing:-.02em}.app-header .logo em{color:#C45E68}
+.avatar,.perfil-avatar{background:linear-gradient(135deg,#E58988,#B95561);box-shadow:0 7px 18px -9px rgba(185,85,97,.7)}
+.contenido{padding:24px 20px 112px}
+.saludo{font-size:27px;letter-spacing:-.035em}.subsaludo{margin-bottom:20px}
+.motivacion{background:linear-gradient(135deg,#302124,#24191A);border:1px solid rgba(255,255,255,.06);box-shadow:var(--shadow-suave);padding:17px 18px 17px 45px}
+.progress-card{background:linear-gradient(135deg,#D9797A,#B95561);border-radius:24px;padding:22px;box-shadow:0 20px 45px -24px rgba(185,85,97,.7)}
+.progress-card .titulo{font-size:21px;letter-spacing:-.02em}
+.card,.modulo-card,.tool-card,.receta-card{border-color:rgba(36,25,26,.07);box-shadow:0 10px 30px -22px rgba(36,25,26,.32)}
+.card{border-radius:18px;padding:18px}.card:hover,.receta-card:hover,.modulo-card:hover{transform:translateY(-3px)}
+.seccion-titulo{margin:30px 0 12px;letter-spacing:.1em;font-size:11px}
+.quick-grid{grid-template-columns:repeat(2,1fr);gap:10px}.quick{padding:16px 10px;border:1px solid rgba(36,25,26,.05);background:linear-gradient(145deg,#FFF,#F8ECE9);border-radius:17px;font-size:11px}.quick:hover{background:#F6DDE2}
+.mini-receta{width:145px;border-radius:18px;box-shadow:0 10px 24px -18px rgba(36,25,26,.35)}
+.mini-img,.receta-img,.detalle-receta-img{background:linear-gradient(145deg,#E8C9C0,#C66A6F)}
+.mini-img{height:78px}.receta-img{height:118px}
+.receta-card .info{padding:13px}.receta-card h5{font-size:13.5px}.receta-grid{gap:11px}
+.tab{background:#F5E8E4}.tab.activo{background:#24191A}
+.modulo-card{border-radius:19px}.modulo-num{background:linear-gradient(135deg,#D9797A,#C59A55)}
+.modulo-info h4{letter-spacing:-.01em}.clase-row{background:#FFF8F4}.video-espacio{background:linear-gradient(135deg,#2E2022,#171011);border:1px solid rgba(255,255,255,.05)}
+.tool-card{border-radius:20px;padding:19px}.campo-sm input,.campo-sm select,.campo input{background:#FFFDFC;border-color:rgba(36,25,26,.09)}
+.resultado-box{background:#24191A}.resultado-fila.destacado{color:#F1C7A2}
+.bottom-nav{background:rgba(255,253,252,.95);border-top:1px solid rgba(36,25,26,.07);box-shadow:0 -8px 30px -25px rgba(36,25,26,.3)}
+.nav-item{border-radius:13px}.nav-item.activo{background:#F7DDE1;color:#B95561}
+.perfil-header{padding-top:8px}.stat{border-radius:17px;background:rgba(255,255,255,.85)}
+.logro{background:#F7EDE8}.logro.conseguido{background:linear-gradient(160deg,#F9EBD5,#E8C9C0)}
+.config-item{padding:17px 4px}
+@media(max-width:360px){.bienvenida-copy h1{font-size:34px}.contenido{padding-left:16px;padding-right:16px}}
+@media(min-width:700px){.contenido{padding-left:28px;padding-right:28px}}
+
+</style>
+</head>
+<body>
+
+<svg class="icon-sprite" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9a1 1 0 0 0 1 1h4v-6h2v6h4a1 1 0 0 0 1-1v-9"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M3 6a2 2 0 0 1 2-2h5v16H5a2 2 0 0 1-2-2z"/><path d="M21 6a2 2 0 0 0-2-2h-5v16h5a2 2 0 0 0 2-2z"/></symbol>
+  <symbol id="i-cap" viewBox="0 0 24 24"><path d="M2 9 12 4l10 5-10 5z"/><path d="M6 11.5V16c0 1.5 2.5 3 6 3s6-1.5 6-3v-4.5"/></symbol>
+  <symbol id="i-tools" viewBox="0 0 24 24"><path d="M4 6h10M4 12h16M4 18h7"/><circle cx="17" cy="6" r="2"/><circle cx="9" cy="18" r="2"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.35-9.5-8.5C.8 8 2 4.5 5.5 4c2-.3 3.7.8 4.5 2.3C10.8 4.8 12.5 3.7 14.5 4 18 4.5 19.2 8 17.5 11.5 15 15.65 12 20 12 20z"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-dollar" viewBox="0 0 24 24"><path d="M12 2v20"/><path d="M17 6.5c0-1.9-2.2-3-5-3s-5 1.1-5 3 2 2.7 5 3.3 5 1.9 5 3.7-2.2 3-5 3-5-1.1-5-3"/></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><path d="M3 11 12 2h7a2 2 0 0 1 2 2v7l-9 9a2 2 0 0 1-2.8 0l-6.2-6.2a2 2 0 0 1 0-2.8z"/><circle cx="15.5" cy="8.5" r="1.3"/></symbol>
+  <symbol id="i-shuffle" viewBox="0 0 24 24"><path d="M4 4v5h5"/><path d="M20 20v-5h-5"/><path d="M5 15a8 8 0 0 0 14 3l1-3"/><path d="M19 9A8 8 0 0 0 5 6L4 9"/></symbol>
+  <symbol id="i-cart" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.3"/><circle cx="18" cy="20" r="1.3"/><path d="M2 3h2l2.4 12.2a2 2 0 0 0 2 1.8h8.6a2 2 0 0 0 2-1.6L21 8H6"/></symbol>
+  <symbol id="i-sprout" viewBox="0 0 24 24"><path d="M12 20V10"/><path d="M12 10C12 6 8 5 5 6c0 4 3 6 7 6"/><path d="M12 10c0-4 4-5 7-4 0 4-3 6-7 6"/></symbol>
+  <symbol id="i-cookie" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1" fill="currentColor" stroke="none"/><circle cx="14" cy="9" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="14" r="1" fill="currentColor" stroke="none"/><circle cx="10" cy="15" r="1" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 2 13.8 9.2 21 11 13.8 12.8 12 20 10.2 12.8 3 11 10.2 9.2z"/></symbol>
+  <symbol id="i-crown" viewBox="0 0 24 24"><path d="M3 8 7 11 12 5 17 11 21 8 20 18H4z"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor" stroke="none"/></symbol>
+</svg>
+
+<div class="app" id="app">
+
+  <div class="pantalla activa" id="p-bienvenida">
+    <div class="bienvenida-visual"><div class="cookie-hero"></div></div>
+    <div class="bienvenida-copy">
+      <p class="kicker">COOKIE BUSINESS CLUB</p>
+      <h1 class="serif">Hornea. Crea. Vende.</h1>
+      <p>Aprende a crear cookies increíbles y transforma tus recetas en un negocio real, paso a paso.</p>
+      <div class="bienvenida-botones">
+        <button class="btn btn-primario" onclick="irA('registro')">Crear mi cuenta</button>
+        <button class="btn btn-secundario" style="background:transparent;border-color:rgba(251,245,236,.3);color:var(--ivory)" onclick="irA('login')">Iniciar sesión</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="pantalla" id="p-login">
+    <div class="auth-header"><button class="volver" onclick="irA('bienvenida')">← Atrás</button></div>
+    <div class="auth-body">
+      <h2 class="serif">Bienvenida de nuevo</h2>
+      <p class="sub">Inicia sesión para continuar tu progreso.</p>
+
+      <div class="campo" id="login-correo-campo">
+        <label>Correo electrónico</label>
+        <input type="email" id="login-correo" placeholder="tucorreo@ejemplo.com">
+        <p class="msg-error">Ingresa un correo válido.</p>
+      </div>
+      <div class="campo" id="login-pass-campo">
+        <label>Contraseña</label>
+        <div class="input-wrap">
+          <input type="password" id="login-pass" placeholder="••••••••">
+          <span class="toggle-pass" onclick="togglePass('login-pass', this)">Mostrar</span>
+        </div>
+        <p class="msg-error">Tu contraseña debe tener al menos 6 caracteres.</p>
+      </div>
+
+      <div class="fila-opciones">
+        <label class="check-remember"><input type="checkbox" id="login-remember" checked> Mantener sesión iniciada</label>
+        <span class="link-sutil" onclick="mostrarToast('Esta función se activará al conectar el backend real.')">¿Olvidaste tu contraseña?</span>
+      </div>
+
+      <button class="btn btn-primario" onclick="intentarLogin()">Iniciar sesión</button>
+      <p class="auth-switch">¿No tienes cuenta? <span class="link-sutil" onclick="irA('registro')">Regístrate</span></p>
+    </div>
+  </div>
+
+  <div class="pantalla" id="p-registro">
+    <div class="auth-header"><button class="volver" onclick="irA('bienvenida')">← Atrás</button></div>
+    <div class="auth-body">
+      <h2 class="serif">Crea tu cuenta</h2>
+      <p class="sub">Empieza tu camino hacia tu propia bakery.</p>
+
+      <div class="campo" id="reg-nombre-campo">
+        <label>Nombre</label>
+        <input type="text" id="reg-nombre" placeholder="Tu nombre">
+        <p class="msg-error">Cuéntanos cómo te llamas.</p>
+      </div>
+      <div class="campo" id="reg-correo-campo">
+        <label>Correo electrónico</label>
+        <input type="email" id="reg-correo" placeholder="tucorreo@ejemplo.com">
+        <p class="msg-error">Ingresa un correo válido.</p>
+      </div>
+      <div class="campo" id="reg-pass-campo">
+        <label>Contraseña</label>
+        <div class="input-wrap">
+          <input type="password" id="reg-pass" placeholder="Mínimo 6 caracteres">
+          <span class="toggle-pass" onclick="togglePass('reg-pass', this)">Mostrar</span>
+        </div>
+        <p class="msg-error">Tu contraseña debe tener al menos 6 caracteres.</p>
+      </div>
+      <div class="campo" id="reg-pass2-campo">
+        <label>Confirmar contraseña</label>
+        <div class="input-wrap">
+          <input type="password" id="reg-pass2" placeholder="Repite tu contraseña">
+          <span class="toggle-pass" onclick="togglePass('reg-pass2', this)">Mostrar</span>
+        </div>
+        <p class="msg-error">Las contraseñas no coinciden.</p>
+      </div>
+
+      <button class="btn btn-primario" onclick="intentarRegistro()">Crear mi cuenta</button>
+      <p class="auth-switch">¿Ya tienes cuenta? <span class="link-sutil" onclick="irA('login')">Inicia sesión</span></p>
+    </div>
+  </div>
+
+  <div class="pantalla" id="p-app-shell" style="padding:0">
+    <div class="app-header">
+      <div class="logo">COOKIE <em>Club</em></div>
+      <div class="avatar" id="avatar-header" onclick="irA('perfil')">C</div>
+    </div>
+
+    <div class="contenido" id="contenido-scroll">
+
+      <div class="vista" id="v-inicio">
+        <p class="saludo" id="saludo-nombre">Hola</p>
+        <p class="subsaludo">Sigamos construyendo tu negocio.</p>
+        <div class="motivacion"><span id="frase-motivacion">"Cada gran bakery empezó con una sola cookie perfecta."</span></div>
+
+        <div class="progress-card">
+          <p class="rango" id="nivel-inicio">Cookie Beginner</p>
+          <p class="titulo">Tu progreso general</p>
+          <div class="barra-fondo"><div class="barra-relleno" id="barra-inicio" style="width:0%"></div></div>
+          <p class="pct" id="pct-inicio">0% completado</p>
+        </div>
+
+        <div class="card" onclick="continuarAprendiendo()">
+          <div class="card-fila">
+            <div><h4><svg class="ico-svg ico-inline"><use href="#i-play"/></svg>Continuar aprendiendo</h4><p id="siguiente-clase-txt">Empieza tu primer módulo</p></div>
+            <span class="flecha">→</span>
+          </div>
+        </div>
+
+        <p class="seccion-titulo">Recetas recomendadas <span class="ver-todas" onclick="irANav('recetas')">Ver todas</span></p>
+        <div class="scroll-row" id="recomendadas-row"></div>
+
+        <p class="seccion-titulo">Tus favoritas <span class="ver-todas" onclick="irANav('recetas')">Ver todas</span></p>
+        <div class="scroll-row" id="favoritas-row"></div>
+
+        <p class="seccion-titulo">Logros recientes</p>
+        <div class="logros-fila" id="logros-inicio"></div>
+
+        <p class="seccion-titulo">Herramientas rápidas</p>
+        <div class="quick-grid">
+          <div class="quick" onclick="irANav('herramientas')"><svg class="ico-svg"><use href="#i-dollar"/></svg>Costos</div>
+          <div class="quick" onclick="irANav('herramientas')"><svg class="ico-svg"><use href="#i-tag"/></svg>Precios</div>
+          <div class="quick" onclick="irANav('herramientas')"><svg class="ico-svg"><use href="#i-shuffle"/></svg>Escalar</div>
+          <div class="quick" onclick="irANav('herramientas')"><svg class="ico-svg"><use href="#i-cart"/></svg>Compras</div>
+        </div>
+      </div>
+
+      <div class="vista" id="v-academia" style="display:none">
+        <p class="saludo" style="font-size:20px">Academia</p>
+        <p class="subsaludo">7 módulos, de la técnica al negocio.</p>
+        <div id="lista-modulos"></div>
+      </div>
+
+      <div class="vista" id="v-clase" style="display:none">
+        <div class="detalle-top"><button class="volver" onclick="mostrarVista('academia')">← Academia</button></div>
+        <h3 class="serif" id="clase-titulo" style="font-size:21px;margin-top:8px"></h3>
+        <p style="color:var(--muted);font-size:13px" id="clase-modulo-nombre"></p>
+        <div class="video-espacio"><div class="play"><svg class="ico-svg" style="width:18px;height:18px"><use href="#i-play"/></svg></div><span>Espacio para video (próximamente)</span></div>
+        <div class="clase-contenido" id="clase-contenido"></div>
+        <div class="materiales" id="clase-materiales"></div>
+        <button class="btn btn-primario" style="margin-top:20px" id="btn-completar-clase" onclick="completarClaseActual()">Marcar como completada</button>
+      </div>
+
+      <div class="vista" id="v-recetas" style="display:none">
+        <p class="saludo" style="font-size:20px">Recetario</p>
+        <div class="tabs" id="tabs-recetas"></div>
+        <div class="receta-grid" id="grid-recetas"></div>
+      </div>
+
+      <div class="vista" id="v-receta-detalle" style="display:none">
+        <div class="detalle-top"><button class="volver" onclick="mostrarVista('recetas')">← Recetario</button></div>
+        
+        <div class="detalle-receta-img"><div class="fav-grande" id="fav-grande" onclick="toggleFavoritaActual()"><svg class="ico-svg"><use href="#i-heart"/></svg></div></div>
+        <h3 class="serif" id="rd-titulo" style="font-size:23px"></h3>
+        <p style="color:var(--muted);font-size:13.5px;margin-top:4px" id="rd-desc"></p>
+        <div class="meta-receta" id="rd-meta"></div>
+
+        <p class="seccion-titulo">¿Cuántas cookies necesitas?</p>
+        <div class="selector-cant" id="selector-cantidades"></div>
+
+        <p class="seccion-titulo">Ingredientes</p>
+        <div id="lista-ingredientes"></div>
+
+        <p class="seccion-titulo">Preparación</p>
+        <div id="lista-pasos"></div>
+
+        <p class="seccion-titulo">Consejos y errores comunes</p>
+        <div class="tip-box" id="rd-tip"></div>
+        <div class="tip-box" id="rd-error"></div>
+
+        <div class="acciones-receta">
+          <button class="btn btn-secundario" onclick="toggleFavoritaActual()"><svg class="ico-svg ico-inline"><use href="#i-heart"/></svg>Favorita</button>
+          <button class="btn btn-primario" onclick="marcarPreparada()">✓ Marcar preparada</button>
+        </div>
+      </div>
+
+      <div class="vista" id="v-herramientas" style="display:none">
+        <p class="saludo" style="font-size:20px">Herramientas</p>
+        <p class="subsaludo">Cálculos reales para tu negocio.</p>
+        <div class="tools-tabs" id="tools-tabs"></div>
+
+        <div class="herramientas-toggle activa" id="tool-costos">
+          <div class="tool-card">
+            <h4><svg class="ico-svg ico-inline"><use href="#i-dollar"/></svg>Calculadora de Costos</h4>
+            <p class="desc">Costo real de un ingrediente dentro de tu receta.</p>
+            <div class="fila-2">
+              <div class="campo-sm"><label>Ingrediente</label><input id="c-nombre" value="Mantequilla"></div>
+              <div class="campo-sm"><label>Moneda</label>
+                <select id="c-moneda" onchange="sincronizarMoneda(this.value)"></select>
+              </div>
+            </div>
+            <div class="fila-2">
+              <div class="campo-sm"><label>Precio de compra</label><input id="c-precio" type="number" value="3990"></div>
+              <div class="campo-sm"><label>Cant. comprada (g)</label><input id="c-comprada" type="number" value="500"></div>
+            </div>
+            <div class="fila-2">
+              <div class="campo-sm"><label>Cant. usada (g)</label><input id="c-usada" type="number" value="180"></div>
+              <div class="campo-sm"><label>Rinde (cookies)</label><input id="c-rinde" type="number" value="24"></div>
+            </div>
+            <button class="btn btn-oscuro btn-mini" onclick="calcularCosto()">Calcular</button>
+            <div class="resultado-box" id="resultado-costo"></div>
+          </div>
+        </div>
+
+        <div class="herramientas-toggle" id="tool-precio">
+          <div class="tool-card">
+            <h4><svg class="ico-svg ico-inline"><use href="#i-tag"/></svg>Precio de Venta y Margen</h4>
+            <p class="desc">Define tu precio a partir del costo y el margen que quieres ganar.</p>
+            <div class="fila-2">
+              <div class="campo-sm"><label>Costo por cookie</label><input id="p-costo" type="number" value="450"></div>
+              <div class="campo-sm"><label>Margen deseado (%)</label><input id="p-margen" type="number" value="55"></div>
+            </div>
+            <button class="btn btn-oscuro btn-mini" onclick="calcularPrecio()">Calcular</button>
+            <div class="resultado-box" id="resultado-precio"></div>
+          </div>
+          <div class="tool-card">
+            <h4><svg class="ico-svg ico-inline"><use href="#i-tag"/></svg>Calculadora de Margen</h4>
+            <p class="desc">Si ya tienes un precio, calcula qué margen real estás ganando.</p>
+            <div class="fila-2">
+              <div class="campo-sm"><label>Costo por cookie</label><input id="m-costo" type="number" value="450"></div>
+              <div class="campo-sm"><label>Precio de venta</label><input id="m-precio" type="number" value="900"></div>
+            </div>
+            <button class="btn btn-oscuro btn-mini" onclick="calcularMargen()">Calcular</button>
+            <div class="resultado-box" id="resultado-margen"></div>
+          </div>
+        </div>
+
+        <div class="herramientas-toggle" id="tool-escalar">
+          <div class="tool-card">
+            <h4><svg class="ico-svg ico-inline"><use href="#i-shuffle"/></svg>Escalar una Receta</h4>
+            <p class="desc">Convierte cualquier cantidad de un ingrediente a otro rendimiento.</p>
+            <div class="fila-2">
+              <div class="campo-sm"><label>Cantidad original</label><input id="e-cant" type="number" value="300"></div>
+              <div class="campo-sm"><label>Rinde original (cookies)</label><input id="e-rinde-orig" type="number" value="24"></div>
+            </div>
+            <div class="campo-sm"><label>Nuevo rendimiento (cookies)</label><input id="e-rinde-nuevo" type="number" value="50"></div>
+            <button class="btn btn-oscuro btn-mini" onclick="calcularEscala()">Calcular</button>
+            <div class="resultado-box" id="resultado-escala"></div>
+          </div>
+          <div class="tool-card">
+            <h4><svg class="ico-svg ico-inline"><use href="#i-shuffle"/></svg>Conversor de Unidades</h4>
+            <p class="desc">Conversiones rápidas y aproximadas para repostería.</p>
+            <div class="fila-2">
+              <div class="campo-sm"><label>Cantidad</label><input id="u-cant" type="number" value="1"></div>
+              <div class="campo-sm"><label>Convertir</label>
+                <select id="u-tipo">
+                  <option value="taza-g-harina">Tazas de harina → g</option>
+                  <option value="taza-g-azucar">Tazas de azúcar → g</option>
+                  <option value="cda-ml">Cucharadas → ml</option>
+                  <option value="cdta-ml">Cucharaditas → ml</option>
+                  <option value="g-kg">Gramos → kg</option>
+                  <option value="ml-l">Mililitros → litros</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn btn-oscuro btn-mini" onclick="calcularConversion()">Convertir</button>
+            <div class="resultado-box" id="resultado-conversion"></div>
+          </div>
+        </div>
+
+        <div class="herramientas-toggle" id="tool-compras">
+          <div class="tool-card">
+            <h4><svg class="ico-svg ico-inline"><use href="#i-cart"/></svg>Lista de Compras</h4>
+            <p class="desc">Selecciona las recetas que vas a preparar.</p>
+            <div id="recetas-para-lista"></div>
+            <button class="btn btn-oscuro btn-mini" style="margin-top:10px" onclick="generarListaCompras()">Generar lista</button>
+          </div>
+          <div class="tool-card" id="lista-compras-resultado" style="display:none">
+            <h4>Tu lista</h4>
+            <div id="lista-compras-items"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vista" id="v-perfil" style="display:none">
+        <div class="perfil-header">
+          <div class="perfil-avatar" id="perfil-avatar">C</div>
+          <h3 id="perfil-nombre">—</h3>
+          <p id="perfil-correo">—</p>
+          <p style="font-size:11.5px;margin-top:2px" id="perfil-fecha"></p>
+          <span class="nivel-tag" id="perfil-nivel">Cookie Beginner</span>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat"><b id="stat-progreso">0%</b><span>PROGRESO</span></div>
+          <div class="stat"><b id="stat-favoritas">0</b><span>FAVORITAS</span></div>
+          <div class="stat"><b id="stat-preparadas">0</b><span>PREPARADAS</span></div>
+        </div>
+
+        <p class="seccion-titulo">Logros</p>
+        <div class="logros-grid" id="logros-grid-perfil"></div>
+
+        <p class="seccion-titulo">Configuración</p>
+        <div class="card" style="padding:4px 16px">
+          <div class="config-item" onclick="abrirEdicion('nombre')"><span>Cambiar nombre</span><span class="valor">Editar ›</span></div>
+          <div class="config-item" onclick="abrirEdicion('correo')"><span>Cambiar correo</span><span class="valor">Editar ›</span></div>
+          <div class="config-item" onclick="abrirEdicion('password')"><span>Cambiar contraseña</span><span class="valor">Editar ›</span></div>
+          <div class="config-item" onclick="abrirEdicion('idioma')"><span>Idioma</span><span class="valor" id="config-idioma-valor">Español ›</span></div>
+          <div class="config-item" onclick="abrirEdicion('moneda')"><span>Moneda</span><span class="valor" id="config-moneda-valor">CLP ›</span></div>
+          <div class="config-item salir" onclick="confirmarCerrarSesion()"><span>Cerrar sesión</span><span>›</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="bottom-nav">
+      <div class="nav-item activo" data-nav="inicio" onclick="irANav('inicio')"><svg class="ico-svg"><use href="#i-home"/></svg>Inicio</div>
+      <div class="nav-item" data-nav="recetas" onclick="irANav('recetas')"><svg class="ico-svg"><use href="#i-book"/></svg>Recetas</div>
+      <div class="nav-item" data-nav="academia" onclick="irANav('academia')"><svg class="ico-svg"><use href="#i-cap"/></svg>Academia</div>
+      <div class="nav-item" data-nav="herramientas" onclick="irANav('herramientas')"><svg class="ico-svg"><use href="#i-tools"/></svg>Más</div>
+      <div class="nav-item" data-nav="perfil" onclick="irANav('perfil')"><svg class="ico-svg"><use href="#i-user"/></svg>Perfil</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast-cont" id="toast-cont"></div>
+
+<div class="modal-fondo" id="modal-generico">
+  <div class="modal-box" id="modal-generico-box"></div>
+</div>
+
+<script>
+const AUTH_USERS_KEY = 'cbc_users_v2';
+const AUTH_SESSION_KEY = 'cbc_session_v2';
+
+// Navegación base: se define antes del sistema de autenticación para que los botones
+// de bienvenida siempre respondan, incluso si el almacenamiento del navegador está restringido.
+function irA(pantalla){
+  document.querySelectorAll('#app > .pantalla').forEach(p => p.classList.remove('activa'));
+  const destino = document.getElementById('p-' + pantalla);
+  if (destino) destino.classList.add('activa');
+}
+
+
+function cargarUsuarios(){
+  try { return JSON.parse(localStorage.getItem(AUTH_USERS_KEY) || '{}'); }
+  catch(e){ window.__CBC_MEMORY_USERS__ = window.__CBC_MEMORY_USERS__ || {}; return window.__CBC_MEMORY_USERS__; }
+}
+function guardarUsuarios(usuarios){
+  try { localStorage.setItem(AUTH_USERS_KEY, JSON.stringify(usuarios)); } catch(e) { window.__CBC_MEMORY_USERS__ = usuarios; }
+}
+
+const auth = {
+  usuarioActual: null,
+  usuarios: cargarUsuarios(),
+
+  registrar(nombre, correo, password){
+    correo = String(correo || '').trim().toLowerCase();
+    if (this.usuarios[correo]) return { ok:false, error:'Ya existe una cuenta con ese correo.' };
+    this.usuarios[correo] = { nombre, correo, password, creado: new Date().toISOString() };
+    guardarUsuarios(this.usuarios);
+    this.usuarioActual = correo;
+    return { ok:true };
+  },
+  login(correo, password, mantener=true){
+    correo = String(correo || '').trim().toLowerCase();
+    const u = this.usuarios[correo];
+    if (!u) return { ok:false, error:'No encontramos una cuenta con ese correo. Primero debes registrarte.' };
+    if (u.password !== password) return { ok:false, error:'La contraseña es incorrecta.' };
+    this.usuarioActual = correo;
+    if (mantener) localStorage.setItem(AUTH_SESSION_KEY, correo);
+    else sessionStorage.setItem(AUTH_SESSION_KEY, correo);
+    return { ok:true };
+  },
+  usuario(){ return this.usuarios[this.usuarioActual]; },
+  cerrarSesion(){
+    this.usuarioActual = null;
+    localStorage.removeItem(AUTH_SESSION_KEY);
+    sessionStorage.removeItem(AUTH_SESSION_KEY);
+  },
+  restaurarSesion(){
+    const correo = localStorage.getItem(AUTH_SESSION_KEY) || sessionStorage.getItem(AUTH_SESSION_KEY);
+    if (correo && this.usuarios[correo]) { this.usuarioActual = correo; return true; }
+    return false;
+  },
+  guardar(){ guardarUsuarios(this.usuarios); }
+};
+
+const estado = {
+  idioma: 'es',
+  moneda: 'CLP',
+  favoritas: new Set(),
+  preparadas: 0,
+  logros: new Set(['principiante']),
+  moduloProgreso: [0,0,0,0,0,0,0],
+};
+
+const monedas = {
+  CLP:{simbolo:'$', nombre:'CLP'}, USD:{simbolo:'US$', nombre:'USD'}, EUR:{simbolo:'€', nombre:'EUR'},
+  MXN:{simbolo:'MX$', nombre:'MXN'}, COP:{simbolo:'COP$', nombre:'COP'}, ARS:{simbolo:'AR$', nombre:'ARS'}, BRL:{simbolo:'R$', nombre:'BRL'}
+};
+
+const idiomas = {
+  es:{ nombre:'Español', inicio:'Inicio', recetas:'Recetas', academia:'Academia', mas:'Más', perfil:'Perfil' },
+  en:{ nombre:'English', inicio:'Home', recetas:'Recipes', academia:'Academy', mas:'More', perfil:'Profile' },
+  pt:{ nombre:'Português', inicio:'Início', recetas:'Receitas', academia:'Academia', mas:'Mais', perfil:'Perfil' }
+};
+
+const modulos = [
+  {t:'La Cookie Perfecta', d:'Ingredientes, textura y errores comunes', clases:[
+    {t:'Qué hace cada ingrediente', c:'Cada ingrediente cumple una función específica: la mantequilla aporta sabor y textura, el azúcar morena humedad, los huevos estructura.'},
+    {t:'Textura: bordes crujientes, centro suave', c:'La temperatura del horno y el tiempo exacto son los que definen si tu cookie queda con el contraste de texturas ideal.'},
+    {t:'Errores comunes y solución', c:'Cookies que se expanden demasiado, quedan muy planas o muy duras — aquí revisamos las causas más frecuentes y cómo corregirlas.'}]},
+  {t:'Cookies Tipo Bakery', d:'Chocolate Chip, Triple Chocolate y Oreo', clases:[
+    {t:'Chocolate Chip clásica', c:'La técnica base de la cookie bakery: mezclado, reposo de la masa y horneado a la temperatura correcta.'},
+    {t:'Triple Chocolate', c:'Tres texturas de chocolate en una sola cookie, sin que se vuelva demasiado dulce.'},
+    {t:'Oreo', c:'Cómo incorporar galleta triturada sin que la masa pierda estructura.'}]},
+  {t:'Cookies Gourmet', d:'Pistacho, Strawberry Cheesecake y Lemon Pie', clases:[
+    {t:'Pistacho y chocolate blanco', c:'Combinaciones de sabor premium y cómo lograr una presentación más elevada.'},
+    {t:'Strawberry Cheesecake', c:'Cómo lograr el sabor a cheesecake sin que la masa quede húmeda.'},
+    {t:'Lemon Pie', c:'Equilibrar acidez y dulzor en una cookie inspirada en un postre clásico.'}]},
+  {t:'Cookies Rellenas', d:'Nutella, Kinder y Manjar sin fugas', clases:[
+    {t:'Cómo rellenar sin fugas', c:'La técnica de sellado y congelado que evita que el relleno se escape al hornear.'},
+    {t:'Nutella', c:'Cantidad ideal de relleno y tiempo de horneado.'},
+    {t:'Kinder y Manjar', c:'Variaciones de relleno y cómo ajustar la técnica base a cada uno.'}]},
+  {t:'Cookies que Venden', d:'Presentación, packaging y fotografía', clases:[
+    {t:'Presentación y packaging', c:'Cómo armar cajas y presentaciones que se vean profesionales sin gastar de más.'},
+    {t:'Fotografía con celular', c:'Luz, ángulos y fondos simples para fotos que vendan.'},
+    {t:'Crea tu propia cookie', c:'Aplica todo lo aprendido para diseñar tu propia receta original.'}]},
+  {t:'Tu Negocio', d:'Costos, márgenes, precios y menú', clases:[
+    {t:'Costos y márgenes', c:'Cómo calcular tu costo real por cookie y definir un margen saludable.'},
+    {t:'Tu menú', c:'Cómo estructurar un menú que sea fácil de entender y de pedir.'},
+    {t:'Primeros clientes', c:'Estrategias simples para conseguir tus primeros pedidos.'}]},
+  {t:'Tu Negocio con IA', d:'Marca, contenido y página web', clases:[
+    {t:'Crea tu marca con IA', c:'Prompts para definir nombre, paleta y tono de tu marca.'},
+    {t:'Contenido y redes', c:'Cómo generar ideas de contenido con IA sin perder autenticidad.'},
+    {t:'Tu página web', c:'El proceso para crear tu propia web con ayuda de IA.'}]},
+];
+
+const recetas = [
+  {id:1, cat:'bakery', titulo:'Chocolate Chip', desc:'La clásica bakery, bordes crujientes y centro suave.', rinde:24, tiempo:'35 min', dificultad:'Fácil',
+    ingredientes:[['Harina',300,'g'],['Mantequilla',180,'g'],['Azúcar morena',150,'g'],['Chips de chocolate',200,'g'],['Huevos',2,'unidad']],
+    pasos:['Cremar la mantequilla con el azúcar hasta que esté esponjosa.','Agregar los huevos uno a uno, integrando bien.','Incorporar la harina tamizada y los chips de chocolate.','Formar bolitas y hornear a 180°C por 11-13 minutos.'],
+    tip:'Deja reposar la masa 30 minutos en el refrigerador antes de hornear — el sabor mejora notablemente.',
+    error:'Si tus cookies quedan muy planas, probablemente la mantequilla estaba demasiado derretida.'},
+  {id:2, cat:'bakery', titulo:'Triple Chocolate', desc:'Tres tipos de chocolate en una sola cookie.', rinde:24, tiempo:'35 min', dificultad:'Fácil',
+    ingredientes:[['Harina',260,'g'],['Cacao en polvo',40,'g'],['Mantequilla',180,'g'],['Chocolate blanco',100,'g'],['Chocolate semi-amargo',100,'g']],
+    pasos:['Cremar mantequilla y azúcar.','Agregar el cacao tamizado junto a la harina.','Incorporar los trozos de ambos chocolates.','Hornear a 180°C por 12 minutos.'],
+    tip:'Usa chocolate picado a cuchillo en vez de chips — se derrite de forma más irregular y se ve más artesanal.',
+    error:'Si el sabor a cacao queda muy fuerte, reduce ligeramente la cantidad la próxima vez.'},
+  {id:3, cat:'bakery', titulo:'Oreo', desc:'Cookie con trozos de galleta Oreo integrados.', rinde:20, tiempo:'30 min', dificultad:'Fácil',
+    ingredientes:[['Harina',300,'g'],['Mantequilla',170,'g'],['Galletas Oreo',150,'g'],['Azúcar blanca',120,'g']],
+    pasos:['Triturar las galletas en trozos medianos, no muy finos.','Cremar mantequilla y azúcar.','Incorporar harina y galleta triturada.','Hornear a 175°C por 11 minutos.'],
+    tip:'Guarda algunos trozos grandes de galleta para decorar encima antes de hornear.',
+    error:'Si la masa queda muy seca, es probable que se haya agregado demasiada galleta molida fina.'},
+  {id:4, cat:'gourmet', titulo:'Pistacho & Choco Blanco', desc:'Combinación premium con presentación gourmet.', rinde:18, tiempo:'40 min', dificultad:'Media',
+    ingredientes:[['Harina',280,'g'],['Mantequilla',170,'g'],['Pistacho picado',90,'g'],['Chocolate blanco',120,'g']],
+    pasos:['Cremar mantequilla y azúcar hasta blanquear.','Incorporar harina tamizada.','Agregar pistacho picado y chocolate blanco en trozos.','Hornear a 175°C por 12-14 minutos.'],
+    tip:'Reserva un poco de pistacho para espolvorear encima recién salidas del horno.',
+    error:'El pistacho se quema fácil — vigila los últimos 2 minutos de horneado.'},
+  {id:5, cat:'gourmet', titulo:'Strawberry Cheesecake', desc:'Sabor a cheesecake con trozos de frutilla.', rinde:18, tiempo:'40 min', dificultad:'Media',
+    ingredientes:[['Harina',270,'g'],['Queso crema',100,'g'],['Frutilla deshidratada',60,'g'],['Mantequilla',160,'g']],
+    pasos:['Cremar mantequilla, queso crema y azúcar.','Incorporar la harina con cuidado de no sobre-mezclar.','Agregar la frutilla deshidratada picada.','Hornear a 175°C por 13 minutos.'],
+    tip:'Usa frutilla deshidratada, no fresca — la fresca aporta demasiada humedad a la masa.',
+    error:'Si la masa queda pegajosa, refrigérala 20 minutos antes de formar las cookies.'},
+  {id:6, cat:'rellenas', titulo:'Nutella', desc:'Cookie rellena, sin fugas al hornear.', rinde:16, tiempo:'50 min (incluye congelado)', dificultad:'Media',
+    ingredientes:[['Harina',300,'g'],['Mantequilla',180,'g'],['Nutella',200,'g'],['Azúcar morena',140,'g']],
+    pasos:['Formar bolitas de Nutella y congelarlas 30 minutos.','Preparar la masa base y envolver cada bolita congelada.','Sellar bien los bordes para evitar fugas.','Hornear a 180°C por 13-15 minutos.'],
+    tip:'Congelar el relleno es el paso que más evita fugas — no te lo saltes.',
+    error:'Si el relleno se escapa, probablemente la masa quedó demasiado delgada en un punto.'},
+  {id:7, cat:'rellenas', titulo:'Manjar', desc:'Relleno de manjar bien congelado antes de hornear.', rinde:16, tiempo:'50 min (incluye congelado)', dificultad:'Media',
+    ingredientes:[['Harina',300,'g'],['Mantequilla',180,'g'],['Manjar',200,'g'],['Azúcar blanca',130,'g']],
+    pasos:['Formar bolitas de manjar bien firmes y congelar.','Envolver con la masa base, sellando completamente.','Hornear a 180°C por 13-15 minutos.','Dejar enfriar antes de manipular.'],
+    tip:'El manjar repostero (más espeso) funciona mejor que el tradicional para este relleno.',
+    error:'Si el manjar se sale por arriba, es porque no se selló bien la parte superior.'},
+];
+
+const frases = [
+  '"Cada gran bakery empezó con una sola cookie perfecta."',
+  '"No necesitas saberlo todo, solo el siguiente paso."',
+  '"Tu negocio se construye una receta a la vez."',
+];
+
+let estadoApp = { moduloAbierto: null, claseActual: null, recetaActual: null, cantidadActual: null };
+
+function irA(pantalla){
+  document.querySelectorAll('#app > .pantalla').forEach(p => p.classList.remove('activa'));
+  document.getElementById('p-' + pantalla).classList.add('activa');
+}
+function irANav(vista){
+  document.querySelectorAll('.vista').forEach(v => v.style.display = 'none');
+  document.getElementById('v-' + vista).style.display = 'block';
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('activo', n.dataset.nav === vista));
+  document.getElementById('contenido-scroll').scrollTop = 0;
+  if (vista === 'academia') renderModulos();
+  if (vista === 'recetas') { renderTabsRecetas(); renderRecetas('todas'); }
+  if (vista === 'herramientas') { renderToolsTabs(); renderRecetasParaLista(); }
+  if (vista === 'perfil') renderPerfil();
+  if (vista === 'inicio') renderInicio();
+}
+function mostrarVista(v){ irANav(v); }
+
+function mostrarToast(msg){
+  const cont = document.getElementById('toast-cont');
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  cont.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transition = '.3s'; setTimeout(() => t.remove(), 300); }, 2600);
+}
+function abrirModal(html){
+  document.getElementById('modal-generico-box').innerHTML = html;
+  document.getElementById('modal-generico').classList.add('activo');
+}
+function cerrarModal(){ document.getElementById('modal-generico').classList.remove('activo'); }
+
+function confirmarCerrarSesion(){
+  abrirModal(`
+    <h4 class="serif">¿Cerrar sesión?</h4>
+    <p>Tu cuenta y tus datos guardados permanecerán disponibles cuando vuelvas a iniciar sesión.</p>
+    <div class="modal-botones">
+      <button class="btn btn-secundario" onclick="cerrarModal()">Cancelar</button>
+      <button class="btn btn-primario" onclick="cerrarSesionReal()">Cerrar sesión</button>
+    </div>
+  `);
+}
+function cerrarSesionReal(){
+  auth.cerrarSesion();
+  cerrarModal();
+  irA('bienvenida');
+}
+
+function togglePass(id, el){
+  const input = document.getElementById(id);
+  const mostrar = input.type === 'password';
+  input.type = mostrar ? 'text' : 'password';
+  el.textContent = mostrar ? 'Ocultar' : 'Mostrar';
+}
+function marcarError(campoId, esError){
+  document.getElementById(campoId).classList.toggle('invalido', esError);
+  const input = document.getElementById(campoId).querySelector('input');
+  if (input) input.classList.toggle('error', esError);
+}
+function validarEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+function intentarLogin(){
+  const correo = document.getElementById('login-correo').value.trim().toLowerCase();
+  const pass = document.getElementById('login-pass').value;
+  const mantener = document.getElementById('login-remember')?.checked ?? true;
+  let valido = true;
+  if (!validarEmail(correo)) { marcarError('login-correo-campo', true); valido = false; } else marcarError('login-correo-campo', false);
+  if (pass.length < 6) { marcarError('login-pass-campo', true); valido = false; } else marcarError('login-pass-campo', false);
+  if (!valido) return;
+  const r = auth.login(correo, pass, mantener);
+  if (!r.ok) { mostrarToast(r.error); return; }
+  entrarALaApp();
+}
+function intentarRegistro(){
+  const nombre = document.getElementById('reg-nombre').value.trim();
+  const correo = document.getElementById('reg-correo').value.trim().toLowerCase();
+  const pass = document.getElementById('reg-pass').value;
+  const pass2 = document.getElementById('reg-pass2').value;
+  let valido = true;
+  if (nombre.length < 2) { marcarError('reg-nombre-campo', true); valido = false; } else marcarError('reg-nombre-campo', false);
+  if (!validarEmail(correo)) { marcarError('reg-correo-campo', true); valido = false; } else marcarError('reg-correo-campo', false);
+  if (pass.length < 6) { marcarError('reg-pass-campo', true); valido = false; } else marcarError('reg-pass-campo', false);
+  if (pass2 !== pass || pass2.length < 6) { marcarError('reg-pass2-campo', true); valido = false; } else marcarError('reg-pass2-campo', false);
+  if (!valido) return;
+  const r = auth.registrar(nombre, correo, pass);
+  if (!r.ok) { mostrarToast(r.error); return; }
+  mostrarToast('Cuenta creada. Bienvenida, ' + nombre);
+  entrarALaApp();
+}
+function entrarALaApp(){ irA('app-shell'); irANav('inicio'); }
+
+function renderInicio(){
+  const u = auth.usuario();
+  const nombre = u ? u.nombre : 'Alumna';
+  document.getElementById('saludo-nombre').textContent = `Hola, ${nombre}`;
+  document.getElementById('avatar-header').textContent = nombre[0].toUpperCase();
+  document.getElementById('frase-motivacion').textContent = frases[Math.floor(Math.random()*frases.length)];
+
+  const {pct, nivel} = calcularProgresoGeneral();
+  document.getElementById('barra-inicio').style.width = pct + '%';
+  document.getElementById('pct-inicio').textContent = pct + '% completado';
+  document.getElementById('nivel-inicio').textContent = nivel;
+
+  const siguiente = obtenerSiguienteClase();
+  document.getElementById('siguiente-clase-txt').textContent = siguiente
+    ? `Módulo ${siguiente.mIdx+1} · ${modulos[siguiente.mIdx].clases[siguiente.cIdx].t}`
+    : 'Completaste todos los módulos.';
+
+  ['recomendadas-row','favoritas-row'].forEach(id => {
+    document.getElementById(id).innerHTML = `<div class="mini-receta skeleton" style="height:110px"></div><div class="mini-receta skeleton" style="height:110px"></div>`;
+  });
+  setTimeout(() => {
+    document.getElementById('recomendadas-row').innerHTML = recetas.slice(0,5).map(r => tarjetaMiniReceta(r)).join('');
+    const favs = recetas.filter(r => estado.favoritas.has(r.id));
+    document.getElementById('favoritas-row').innerHTML = favs.length
+      ? favs.map(r => tarjetaMiniReceta(r)).join('')
+      : `<p style="font-size:12.5px;color:var(--muted)">Aún no tienes recetas favoritas — toca el corazón en cualquier receta.</p>`;
+  }, 400);
+
+  const logrosDef = logrosDefinicion();
+  document.getElementById('logros-inicio').innerHTML = logrosDef.map(l => `
+    <div class="logro-mini ${estado.logros.has(l.id) ? 'conseguido' : ''}"><div class="circ"><svg class="ico-svg"><use href="#${l.ico}"/></svg></div><span>${l.nombreCorto}</span></div>
+  `).join('');
+}
+function tarjetaMiniReceta(r){
+  return `<div class="mini-receta" onclick="abrirReceta(${r.id})"><div class="mini-img"></div><div class="info"><h5>${r.titulo}</h5><span>${r.tiempo}</span></div></div>`;
+}
+function continuarAprendiendo(){
+  const s = obtenerSiguienteClase();
+  if (!s) { mostrarToast('Ya completaste toda la academia.'); return; }
+  abrirClase(s.mIdx, s.cIdx);
+}
+
+function calcularProgresoGeneral(){
+  const totalClases = modulos.reduce((a,m) => a + m.clases.length, 0);
+  const hechas = estado.moduloProgreso.reduce((a,n) => a+n, 0);
+  const pct = Math.round((hechas / totalClases) * 100);
+  let nivel = 'Cookie Beginner';
+  if (pct >= 90) nivel = 'Cookie Business Owner';
+  else if (pct >= 60) nivel = 'Cookie Entrepreneur';
+  else if (pct >= 30) nivel = 'Cookie Artist';
+  else if (pct > 0) nivel = 'Cookie Baker';
+  return {pct, nivel, hechas, totalClases};
+}
+function obtenerSiguienteClase(){
+  for (let m=0; m<modulos.length; m++){
+    if (estado.moduloProgreso[m] < modulos[m].clases.length){
+      return {mIdx:m, cIdx: estado.moduloProgreso[m]};
+    }
+  }
+  return null;
+}
+function logrosDefinicion(){
+  return [
+    {id:'principiante', ico:'i-sprout', nombreCorto:'Inicio', nombre:'Cookie Beginner', condicion:() => true},
+    {id:'maestra', ico:'i-cookie', nombreCorto:'Maestra', nombre:'Cookie Baker', condicion:() => calcularProgresoGeneral().pct >= 30},
+    {id:'creadora', ico:'i-sparkle', nombreCorto:'Creadora', nombre:'Cookie Artist', condicion:() => calcularProgresoGeneral().pct >= 60},
+    {id:'emprendedora', ico:'i-dollar', nombreCorto:'Emprendedora', nombre:'Cookie Entrepreneur', condicion:() => calcularProgresoGeneral().pct >= 90},
+    {id:'duena', ico:'i-crown', nombreCorto:'Dueña', nombre:'Cookie Business Owner', condicion:() => calcularProgresoGeneral().pct === 100},
+  ];
+}
+function revisarLogrosNuevos(){
+  logrosDefinicion().forEach(l => {
+    if (!estado.logros.has(l.id) && l.condicion()){
+      estado.logros.add(l.id);
+      abrirModal(`
+        <div class="logro-modal">
+          <div class="circ-grande"><svg class="ico-svg"><use href="#${l.ico}"/></svg></div>
+          <h4 class="serif">Logro desbloqueado</h4>
+          <p>${l.nombre}</p>
+          <button class="btn btn-primario" onclick="cerrarModal()">Genial</button>
+        </div>
+      `);
+    }
+  });
+}
+
+function renderModulos(){
+  document.getElementById('lista-modulos').innerHTML = `<div class="skeleton skeleton-card"></div><div class="skeleton skeleton-card"></div>`;
+  setTimeout(() => {
+    document.getElementById('lista-modulos').innerHTML = modulos.map((m,i) => {
+      const hechas = estado.moduloProgreso[i];
+      const total = m.clases.length;
+      const desbloqueado = i === 0 || estado.moduloProgreso[i-1] === modulos[i-1].clases.length;
+      const completado = hechas === total;
+      const estadoTxt = completado ? 'completado' : (desbloqueado ? 'disponible' : 'bloqueado');
+      const numClase = completado ? '✓' : (i+1).toString().padStart(2,'0');
+      return `
+      <div class="modulo-card ${estadoApp.moduloAbierto===i?'abierto':''}" id="mod-${i}">
+        <div class="modulo-top" onclick="${desbloqueado ? `toggleModulo(${i})` : `mostrarToast('Completa el módulo anterior primero.')`}">
+          <div class="modulo-num ${completado?'completado':(desbloqueado?'':'bloqueado')}">${desbloqueado ? numClase : '<svg class="ico-svg" style="width:16px;height:16px"><use href="#i-lock"/></svg>'}</div>
+          <div class="modulo-info">
+            <h4>${m.t}</h4>
+            <p>${m.d}</p>
+            <div class="modulo-barra"><div class="relleno" style="width:${(hechas/total)*100}%"></div></div>
+          </div>
+          <span class="estado-tag ${estadoTxt}">${estadoTxt === 'completado' ? 'Listo' : (estadoTxt === 'disponible' ? `${hechas}/${total}` : 'Bloqueado')}</span>
+        </div>
+        <div class="clases-lista">
+          ${m.clases.map((c,j) => {
+            const claseDesbloqueada = desbloqueado && j <= hechas;
+            const hecha = j < hechas;
+            return `<div class="clase-row ${hecha?'hecha':''} ${!claseDesbloqueada?'bloqueada':''}" onclick="${claseDesbloqueada ? `abrirClase(${i},${j})` : `mostrarToast('Completa la clase anterior primero.')`}">
+              <span class="clase-check">${hecha ? '✓' : ''}</span><span class="titulo">${c.t}</span>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>`;
+    }).join('');
+  }, 350);
+}
+function toggleModulo(i){ estadoApp.moduloAbierto = estadoApp.moduloAbierto === i ? null : i; renderModulos(); }
+function abrirClase(mIdx, cIdx){
+  estadoApp.claseActual = {mIdx, cIdx};
+  const m = modulos[mIdx], c = m.clases[cIdx];
+  document.getElementById('clase-titulo').textContent = c.t;
+  document.getElementById('clase-modulo-nombre').textContent = `Módulo ${mIdx+1} · ${m.t}`;
+  document.getElementById('clase-contenido').innerHTML = `<p>${c.c}</p>`;
+  document.getElementById('clase-materiales').innerHTML = `
+    <p class="seccion-titulo">Materiales</p>
+    <div class="material-item">Guía descargable de esta clase</div>
+    <div class="material-item">Checklist de la lección</div>`;
+  const yaHecha = cIdx < estado.moduloProgreso[mIdx];
+  const btn = document.getElementById('btn-completar-clase');
+  btn.textContent = yaHecha ? '✓ Clase completada' : 'Marcar como completada';
+  btn.disabled = yaHecha;
+  btn.style.opacity = yaHecha ? '.6' : '1';
+  irANav('clase');
+}
+function completarClaseActual(){
+  const {mIdx, cIdx} = estadoApp.claseActual;
+  if (cIdx === estado.moduloProgreso[mIdx]){
+    estado.moduloProgreso[mIdx] = cIdx + 1;
+    mostrarToast('✓ Clase completada');
+    revisarLogrosNuevos();
+  }
+  const siguiente = obtenerSiguienteClase();
+  if (siguiente) abrirClase(siguiente.mIdx, siguiente.cIdx);
+  else mostrarVista('academia');
+}
+
+const categoriasRecetas = [['todas','Todas'],['bakery','Bakery'],['gourmet','Gourmet'],['rellenas','Rellenas']];
+function renderTabsRecetas(){
+  document.getElementById('tabs-recetas').innerHTML = categoriasRecetas.map(([id,n]) =>
+    `<div class="tab ${id==='todas'?'activo':''}" data-cat="${id}" onclick="filtrarRecetas('${id}')">${n}</div>`).join('');
+}
+function filtrarRecetas(cat){
+  document.querySelectorAll('#tabs-recetas .tab').forEach(t => t.classList.toggle('activo', t.dataset.cat === cat));
+  renderRecetas(cat);
+}
+function renderRecetas(cat){
+  document.getElementById('grid-recetas').innerHTML = `<div class="skeleton skeleton-tile"></div><div class="skeleton skeleton-tile"></div><div class="skeleton skeleton-tile"></div><div class="skeleton skeleton-tile"></div>`;
+  setTimeout(() => {
+    const lista = cat === 'todas' ? recetas : recetas.filter(r => r.cat === cat);
+    document.getElementById('grid-recetas').innerHTML = lista.map(r => `
+      <div class="receta-card" onclick="abrirReceta(${r.id})">
+        <div class="receta-img"><span class="fav ${estado.favoritas.has(r.id) ? 'activo' : ''}"><svg class="ico-svg"><use href="#i-heart"/></svg></span></div>
+        <div class="info"><h5>${r.titulo}</h5><span>Rinde ${r.rinde} cookies</span></div>
+      </div>`).join('');
+  }, 300);
+}
+
+const escalasCookies = [12,24,36,50,100];
+function abrirReceta(id){
+  estadoApp.recetaActual = recetas.find(r => r.id === id);
+  estadoApp.cantidadActual = estadoApp.recetaActual.rinde;
+  const r = estadoApp.recetaActual;
+  document.getElementById('rd-titulo').textContent = r.titulo;
+  document.getElementById('rd-desc').textContent = r.desc;
+  document.getElementById('rd-meta').innerHTML = `
+    <span class="meta-chip">${r.tiempo}</span><span class="meta-chip">${r.dificultad}</span><span class="meta-chip">Rinde ${r.rinde}</span>`;
+  document.getElementById('fav-grande').classList.toggle('activo', estado.favoritas.has(r.id));
+  document.getElementById('selector-cantidades').innerHTML = escalasCookies.map(n =>
+    `<div class="chip-cant ${n===estadoApp.cantidadActual?'activo':''}" data-n="${n}" onclick="elegirCantidad(${n})">${n} cookies</div>`).join('');
+  document.getElementById('lista-pasos').innerHTML = r.pasos.map((p,i) => `
+    <div class="paso-item"><div class="paso-num">${i+1}</div><p>${p}</p></div>`).join('');
+  document.getElementById('rd-tip').innerHTML = `<span class="tip-label">Consejo</span> ${r.tip}`;
+  document.getElementById('rd-error').innerHTML = `<span class="tip-label tip-label-error">Error común</span> ${r.error}`;
+  pintarIngredientes();
+  irANav('receta-detalle');
+}
+function elegirCantidad(n){
+  estadoApp.cantidadActual = n;
+  document.querySelectorAll('.chip-cant').forEach(c => c.classList.toggle('activo', Number(c.dataset.n) === n));
+  pintarIngredientes();
+}
+function pintarIngredientes(){
+  const r = estadoApp.recetaActual;
+  const factor = estadoApp.cantidadActual / r.rinde;
+  document.getElementById('lista-ingredientes').innerHTML = r.ingredientes.map(([nombre, cant, unidad]) => {
+    const escalado = Math.round((cant * factor) * 10) / 10;
+    return `<div class="ingrediente-row"><span>${nombre}</span><span>${escalado} ${unidad}</span></div>`;
+  }).join('');
+}
+function toggleFavoritaActual(){
+  const id = estadoApp.recetaActual.id;
+  if (estado.favoritas.has(id)) { estado.favoritas.delete(id); mostrarToast('Quitada de favoritas'); }
+  else { estado.favoritas.add(id); mostrarToast('Agregada a favoritas'); }
+  document.getElementById('fav-grande').classList.toggle('activo', estado.favoritas.has(id));
+}
+function marcarPreparada(){
+  estado.preparadas++;
+  mostrarToast('✓ ¡Cookie preparada! Suma ' + estado.preparadas + ' en total.');
+}
+
+const toolsDef = [['costos','Costos'],['precio','Precio y margen'],['escalar','Escalar / Convertir'],['compras','Lista de compras']];
+function renderToolsTabs(){
+  document.getElementById('tools-tabs').innerHTML = toolsDef.map(([id,n],i) =>
+    `<div class="tab ${i===0?'activo':''}" data-tool="${id}" onclick="cambiarTool('${id}')">${n}</div>`).join('');
+}
+function cambiarTool(id){
+  document.querySelectorAll('#tools-tabs .tab').forEach(t => t.classList.toggle('activo', t.dataset.tool === id));
+  document.querySelectorAll('.herramientas-toggle').forEach(el => el.classList.toggle('activa', el.id === 'tool-'+id));
+}
+function sincronizarMoneda(v){ estado.moneda = v; }
+function pobladorMonedas(){
+  const opciones = Object.entries(monedas).map(([k,v]) => `<option value="${k}" ${k===estado.moneda?'selected':''}>${v.nombre}</option>`).join('');
+  const sel = document.getElementById('c-moneda');
+  if (sel) sel.innerHTML = opciones;
+}
+function simboloMoneda(){ return monedas[estado.moneda].simbolo; }
+function fmt(n){ return Math.round(n).toLocaleString('es-CL'); }
+
+function calcularCosto(){
+  const precio = parseFloat(document.getElementById('c-precio').value) || 0;
+  const comprada = parseFloat(document.getElementById('c-comprada').value) || 1;
+  const usada = parseFloat(document.getElementById('c-usada').value) || 0;
+  const rinde = parseFloat(document.getElementById('c-rinde').value) || 1;
+  const nombre = document.getElementById('c-nombre').value || 'Ingrediente';
+  const costoIngrediente = (precio/comprada) * usada;
+  const costoPorCookie = costoIngrediente / rinde;
+  const box = document.getElementById('resultado-costo');
+  box.classList.add('mostrar');
+  box.innerHTML = `
+    <div class="resultado-fila"><span>Costo de ${nombre} usado</span><span>${simboloMoneda()}${fmt(costoIngrediente)}</span></div>
+    <div class="resultado-fila destacado"><span>Costo por cookie</span><span>${simboloMoneda()}${fmt(costoPorCookie)}</span></div>
+    <p style="font-size:10.5px;opacity:.65;margin-top:8px">* Suma este resultado por cada ingrediente de tu receta para el costo total por cookie.</p>`;
+}
+function calcularPrecio(){
+  const costo = parseFloat(document.getElementById('p-costo').value) || 0;
+  const margen = parseFloat(document.getElementById('p-margen').value) || 0;
+  const precio = costo * (1 + margen/100);
+  const ganancia = precio - costo;
+  const box = document.getElementById('resultado-precio');
+  box.classList.add('mostrar');
+  box.innerHTML = `
+    <div class="resultado-fila"><span>Ganancia por cookie</span><span>${simboloMoneda()}${fmt(ganancia)}</span></div>
+    <div class="resultado-fila destacado"><span>Precio de venta sugerido</span><span>${simboloMoneda()}${fmt(precio)}</span></div>`;
+}
+function calcularMargen(){
+  const costo = parseFloat(document.getElementById('m-costo').value) || 0;
+  const precio = parseFloat(document.getElementById('m-precio').value) || 1;
+  const margen = ((precio - costo) / precio) * 100;
+  const ganancia = precio - costo;
+  const box = document.getElementById('resultado-margen');
+  box.classList.add('mostrar');
+  box.innerHTML = `
+    <div class="resultado-fila"><span>Ganancia por cookie</span><span>${simboloMoneda()}${fmt(ganancia)}</span></div>
+    <div class="resultado-fila destacado"><span>Margen real</span><span>${margen.toFixed(1)}%</span></div>`;
+}
+function calcularEscala(){
+  const cant = parseFloat(document.getElementById('e-cant').value) || 0;
+  const rindeOrig = parseFloat(document.getElementById('e-rinde-orig').value) || 1;
+  const rindeNuevo = parseFloat(document.getElementById('e-rinde-nuevo').value) || 0;
+  const resultado = (cant / rindeOrig) * rindeNuevo;
+  const box = document.getElementById('resultado-escala');
+  box.classList.add('mostrar');
+  box.innerHTML = `<div class="resultado-fila destacado"><span>Cantidad necesaria</span><span>${Math.round(resultado*10)/10}</span></div>`;
+}
+const factoresConversion = {
+  'taza-g-harina': {f:120, u:'g'}, 'taza-g-azucar': {f:200, u:'g'},
+  'cda-ml': {f:15, u:'ml'}, 'cdta-ml': {f:5, u:'ml'},
+  'g-kg': {f:0.001, u:'kg'}, 'ml-l': {f:0.001, u:'l'},
+};
+function calcularConversion(){
+  const cant = parseFloat(document.getElementById('u-cant').value) || 0;
+  const tipo = document.getElementById('u-tipo').value;
+  const {f,u} = factoresConversion[tipo];
+  const resultado = cant * f;
+  const box = document.getElementById('resultado-conversion');
+  box.classList.add('mostrar');
+  box.innerHTML = `<div class="resultado-fila destacado"><span>Resultado</span><span>${Math.round(resultado*100)/100} ${u}</span></div>
+    <p style="font-size:10.5px;opacity:.65;margin-top:6px">* Conversión aproximada — puede variar levemente según el ingrediente.</p>`;
+}
+function renderRecetasParaLista(){
+  document.getElementById('recetas-para-lista').innerHTML = recetas.map(r => `
+    <label class="receta-check"><input type="checkbox" value="${r.id}" class="check-receta-lista"> ${r.titulo}</label>`).join('');
+}
+function generarListaCompras(){
+  const seleccionadas = [...document.querySelectorAll('.check-receta-lista:checked')].map(el => Number(el.value));
+  if (!seleccionadas.length) { mostrarToast('Selecciona al menos una receta.'); return; }
+  const combinados = {};
+  seleccionadas.forEach(id => {
+    const r = recetas.find(x => x.id === id);
+    r.ingredientes.forEach(([nombre,cant,unidad]) => {
+      const key = nombre + '|' + unidad;
+      combinados[key] = (combinados[key] || 0) + cant;
+    });
+  });
+  const cont = document.getElementById('lista-compras-items');
+  cont.innerHTML = Object.entries(combinados).map(([key,cant]) => {
+    const [nombre,unidad] = key.split('|');
+    return `<label class="lista-compras-item"><input type="checkbox" onchange="this.parentElement.classList.toggle('comprado')"> <span>${nombre} — ${Math.round(cant*10)/10} ${unidad}</span></label>`;
+  }).join('');
+  document.getElementById('lista-compras-resultado').style.display = 'block';
+  mostrarToast('Lista generada');
+}
+
+function renderPerfil(){
+  const u = auth.usuario();
+  if (!u) return;
+  document.getElementById('perfil-avatar').textContent = u.nombre[0].toUpperCase();
+  document.getElementById('perfil-nombre').textContent = u.nombre;
+  document.getElementById('perfil-correo').textContent = u.correo;
+  document.getElementById('perfil-fecha').textContent = 'Miembro desde ' + u.creado.toLocaleDateString('es-CL', {day:'numeric', month:'long', year:'numeric'});
+  const {pct, nivel} = calcularProgresoGeneral();
+  document.getElementById('perfil-nivel').textContent = nivel;
+  document.getElementById('stat-progreso').textContent = pct + '%';
+  document.getElementById('stat-favoritas').textContent = estado.favoritas.size;
+  document.getElementById('stat-preparadas').textContent = estado.preparadas;
+  document.getElementById('config-idioma-valor').textContent = idiomas[estado.idioma].nombre + ' ›';
+  document.getElementById('config-moneda-valor').textContent = estado.moneda + ' ›';
+  const logrosDef = logrosDefinicion();
+  document.getElementById('logros-grid-perfil').innerHTML = logrosDef.map(l => `
+    <div class="logro ${estado.logros.has(l.id)?'conseguido':''}"><svg class="ico-svg"><use href="#${l.ico}"/></svg><span>${l.nombre}</span></div>`).join('');
+}
+function abrirEdicion(campo){
+  const u = auth.usuario();
+  if (campo === 'nombre'){
+    abrirModal(`<h4 class="serif">Cambiar nombre</h4><div class="campo"><input id="edit-input" value="${u.nombre}"></div>
+      <div class="modal-botones"><button class="btn btn-secundario" onclick="cerrarModal()">Cancelar</button><button class="btn btn-primario" onclick="guardarEdicion('nombre')">Guardar</button></div>`);
+  } else if (campo === 'correo'){
+    abrirModal(`<h4 class="serif">Cambiar correo</h4><div class="campo"><input id="edit-input" value="${u.correo}"></div>
+      <div class="modal-botones"><button class="btn btn-secundario" onclick="cerrarModal()">Cancelar</button><button class="btn btn-primario" onclick="guardarEdicion('correo')">Guardar</button></div>`);
+  } else if (campo === 'password'){
+    abrirModal(`<h4 class="serif">Cambiar contraseña</h4><div class="campo"><input id="edit-input" type="password" placeholder="Nueva contraseña (mín. 6 caracteres)"></div>
+      <div class="modal-botones"><button class="btn btn-secundario" onclick="cerrarModal()">Cancelar</button><button class="btn btn-primario" onclick="guardarEdicion('password')">Guardar</button></div>`);
+  } else if (campo === 'idioma'){
+    abrirModal(`<h4 class="serif">Idioma</h4>
+      <div class="modal-botones" style="flex-direction:column">
+        ${Object.entries(idiomas).map(([k,v]) => `<button class="btn btn-secundario" onclick="cambiarIdioma('${k}')">${v.nombre}</button>`).join('')}
+      </div>`);
+  } else if (campo === 'moneda'){
+    abrirModal(`<h4 class="serif">Moneda</h4>
+      <div class="modal-botones" style="flex-direction:column;max-height:300px;overflow-y:auto">
+        ${Object.entries(monedas).map(([k,v]) => `<button class="btn btn-secundario" onclick="cambiarMoneda('${k}')">${v.nombre} (${v.simbolo})</button>`).join('')}
+      </div>`);
+  }
+}
+function guardarEdicion(campo){
+  const u = auth.usuario();
+  const valor = document.getElementById('edit-input').value.trim();
+  if (campo === 'nombre'){ if (valor.length<2){mostrarToast('Ingresa un nombre válido.');return;} u.nombre = valor; }
+  if (campo === 'correo'){
+    const nuevoCorreo = valor.toLowerCase();
+    if (!validarEmail(nuevoCorreo)){mostrarToast('Ingresa un correo válido.');return;}
+    if (nuevoCorreo !== auth.usuarioActual && auth.usuarios[nuevoCorreo]){mostrarToast('Ese correo ya está registrado.');return;}
+    delete auth.usuarios[auth.usuarioActual];
+    u.correo = nuevoCorreo;
+    auth.usuarios[nuevoCorreo] = u;
+    auth.usuarioActual = nuevoCorreo;
+    if (localStorage.getItem(AUTH_SESSION_KEY)) localStorage.setItem(AUTH_SESSION_KEY, nuevoCorreo);
+    if (sessionStorage.getItem(AUTH_SESSION_KEY)) sessionStorage.setItem(AUTH_SESSION_KEY, nuevoCorreo);
+  }
+  if (campo === 'password'){ if (valor.length<6){mostrarToast('Mínimo 6 caracteres.');return;} u.password = valor; }
+  auth.guardar();
+  cerrarModal();
+  mostrarToast('✓ Cambios guardados');
+  renderPerfil();
+  renderInicio();
+}
+function cambiarIdioma(k){
+  estado.idioma = k;
+  cerrarModal();
+  mostrarToast('Idioma cambiado a ' + idiomas[k].nombre);
+  renderPerfil();
+}
+function cambiarMoneda(k){
+  estado.moneda = k;
+  pobladorMonedas();
+  cerrarModal();
+  mostrarToast('Moneda cambiada a ' + k);
+  renderPerfil();
+}
+
+pobladorMonedas();
+
+// Garantiza la navegación de bienvenida y evita que un error secundario de una sección
+// bloquee los botones principales.
+document.addEventListener('DOMContentLoaded', function(){
+  const registro = document.querySelector('#p-bienvenida button.btn-primario');
+  const login = document.querySelector('#p-bienvenida button.btn-secundario');
+  if (registro) registro.addEventListener('click', function(e){ e.preventDefault(); irA('registro'); });
+  if (login) login.addEventListener('click', function(e){ e.preventDefault(); irA('login'); });
+});
+
+// Restaurar sesión al abrir nuevamente la aplicación.
+if (auth.restaurarSesion()) {
+  window.addEventListener('DOMContentLoaded', () => entrarALaApp());
+}
+</script>
+</body>
+</html>
